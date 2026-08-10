@@ -27,7 +27,7 @@ High-Performance ARM64 Android boot service & root module for [CLIProxyAPI](http
 1. Download **`cliproxyapi-magisk.zip`** from the [Latest Release](https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/latest).
 2. Install the ZIP inside **KernelSU Next**, **APatch**, or **Magisk Manager**.
 3. Reboot device.
-4. Open WebUI at `
+4. Open WebUI at
 ```text
 http://127.0.0.1:8317/management.html
 ```
