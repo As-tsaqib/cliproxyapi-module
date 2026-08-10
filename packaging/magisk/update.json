@@ -1,7 +1,6 @@
 {
-  "version": "v7.2.127",
-  "versionCode": 700212700,
-  "zipUrl": "https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/download/v7.2.127/cliproxyapi-magisk.zip",
-  "changelog": "https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/download/v7.2.127/release-notes.md",
-  "banner": "https://raw.githubusercontent.com/As-tsaqib/CLIProxyAPI-Magisk/main/banner.png"
+  "version": "v7.2.127-r1",
+  "versionCode": 700212701,
+  "zipUrl": "https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/download/v7.2.127-r1/cliproxyapi-magisk.zip",
+  "changelog": "https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/download/v7.2.127-r1/release-notes.md"
 }
