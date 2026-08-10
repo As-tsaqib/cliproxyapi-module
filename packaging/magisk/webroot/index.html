@@ -3,49 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>CLIProxyAPI Dashboard Gateway</title>
+    <title>CLI Proxy API Management Center</title>
     <style>
       :root {
-        --bg: #070a12;
-        --card-bg: #0d1322;
-        --card-sub-bg: #141c2e;
-        --border: #1e293b;
-        --border-sub: #283549;
-        --text-main: #f8fafc;
-        --text-sub: #94a3b8;
-        --text-muted: #64748b;
-        --accent: #06b6d4;
-        --accent-glow: rgba(6, 182, 212, 0.2);
-        --accent-hover: #0891b2;
-        --success: #10b981;
-        --danger: #ef4444;
-        --warning: #f59e0b;
+        --bg: #090b10;
+        --card: #111722;
+        --card-sub: #182030;
+        --border: #263043;
+        --text: #e8eefc;
+        --muted: #8b9bb4;
+        --cyan: #22d3ee;
+        --cyan-dark: #0891b2;
+        --green: #10b981;
+        --red: #ef4444;
+        --yellow: #f59e0b;
       }
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         background-color: var(--bg);
-        color: var(--text-main);
+        color: var(--text);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1rem;
+        padding: 1.25rem;
       }
-      .container {
-        background: var(--card-bg);
+      .card {
+        background: var(--card);
         border: 1px solid var(--border);
-        border-radius: 1.25rem;
+        border-radius: 1rem;
         width: 100%;
-        max-width: 32rem;
+        max-width: 30rem;
         padding: 1.5rem;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
       .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-bottom: 1.25rem;
+        padding-bottom: 1rem;
         border-bottom: 1px solid var(--border);
         margin-bottom: 1.25rem;
       }
@@ -54,241 +51,240 @@
         align-items: center;
         gap: 0.75rem;
       }
-      .brand-icon {
-        width: 2.25rem;
-        height: 2.25rem;
-        border-radius: 0.6rem;
-        background: linear-gradient(135deg, var(--accent), #3b82f6);
-        display: grid;
-        place-items: center;
-        color: #041219;
-        font-weight: 800;
-        font-size: 1.1rem;
+      .brand svg {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
       }
       .brand-title {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         font-weight: 700;
-        letter-spacing: -0.02em;
+        color: var(--text);
+        line-height: 1.2;
       }
-      .brand-subtitle {
+      .brand-sub {
         font-size: 0.75rem;
-        color: var(--text-muted);
+        color: var(--muted);
       }
       .badge {
         display: inline-flex;
         align-items: center;
         gap: 0.4rem;
-        padding: 0.35rem 0.75rem;
+        padding: 0.25rem 0.65rem;
         border-radius: 9999px;
         font-size: 0.75rem;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
+        font-weight: 600;
       }
-      .badge-checking { background: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-      .badge-online { background: rgba(16, 185, 129, 0.15); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.3); }
-      .badge-offline { background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-      .dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; background-color: currentColor; }
-      .dot-pulse { animation: pulse 1.5s infinite; }
-      @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(0.8); } }
+      .badge-checking { background: rgba(245, 158, 11, 0.15); color: var(--yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
+      .badge-online { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
+      .badge-offline { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
+      .dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; }
 
-      /* Stat Cards Grid */
-      .stats-grid {
+      .grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
         margin-bottom: 1.25rem;
       }
-      .stat-card {
-        background: var(--card-sub-bg);
-        border: 1px solid var(--border-sub);
-        border-radius: 0.85rem;
-        padding: 0.85rem;
+      .grid-item {
+        background: var(--card-sub);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        padding: 0.75rem 0.9rem;
       }
-      .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.25rem; }
-      .stat-value { font-size: 0.95rem; font-weight: 700; color: var(--text-main); font-family: ui-monospace, SFMono-Regular, monospace; word-break: break-all; }
+      .grid-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.2rem; }
+      .grid-val { font-size: 0.9rem; font-weight: 600; font-family: ui-monospace, SFMono-Regular, monospace; color: var(--text); }
 
-      /* Actions & Controls */
-      .action-box {
-        background: rgba(6, 182, 212, 0.05);
-        border: 1px solid rgba(6, 182, 212, 0.2);
-        border-radius: 1rem;
-        padding: 1.25rem;
+      .action-banner {
+        background: rgba(34, 211, 238, 0.08);
+        border: 1px solid rgba(34, 211, 238, 0.25);
+        border-radius: 0.75rem;
+        padding: 1rem;
         margin-bottom: 1.25rem;
       }
-      .action-header {
+      .action-banner-title {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--cyan);
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.75rem;
       }
-      .action-title { font-size: 0.9rem; font-weight: 600; color: var(--accent); }
-      .redirect-timer { font-size: 0.8rem; color: var(--text-sub); }
-      
+      .timer-text { font-size: 0.8rem; color: var(--muted); font-weight: normal; }
+
       .btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
+        display: block;
         width: 100%;
-        padding: 0.8rem 1rem;
-        border-radius: 0.75rem;
-        font-weight: 600;
+        padding: 0.75rem 1rem;
+        border-radius: 0.6rem;
+        font-weight: 700;
         font-size: 0.9rem;
+        text-align: center;
         text-decoration: none;
         cursor: pointer;
         border: none;
-        transition: all 0.2s ease;
+        transition: background 0.15s ease;
       }
-      .btn-primary { background: var(--accent); color: #041219; }
-      .btn-primary:hover { background: var(--accent-hover); box-shadow: 0 0 15px var(--accent-glow); }
-      .btn-secondary { background: rgba(255, 255, 255, 0.06); color: var(--text-main); border: 1px solid var(--border-sub); margin-top: 0.5rem; }
-      .btn-secondary:hover { background: rgba(255, 255, 255, 0.12); }
-      .btn-sm { padding: 0.4rem 0.75rem; font-size: 0.8rem; width: auto; }
+      .btn-primary { background: var(--cyan); color: #051016; }
+      .btn-primary:hover { background: var(--cyan-dark); color: #ffffff; }
+      .btn-secondary { background: var(--card-sub); color: var(--text); border: 1px solid var(--border); margin-top: 0.5rem; }
+      .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
 
-      /* Section Details */
-      .section-title { font-size: 0.8rem; font-weight: 700; color: var(--text-sub); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem; }
-      
-      .detail-list {
-        background: var(--card-sub-bg);
-        border: 1px solid var(--border-sub);
-        border-radius: 0.85rem;
-        overflow: hidden;
-        margin-bottom: 1.25rem;
+      .section-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
       }
-      .detail-item {
+      .list {
+        background: var(--card-sub);
+        border: 1px solid var(--border);
+        border-radius: 0.75rem;
+        overflow: hidden;
+      }
+      .list-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0.75rem 1rem;
-        border-bottom: 1px solid var(--border-sub);
-        font-size: 0.85rem;
+        padding: 0.65rem 0.85rem;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.825rem;
       }
-      .detail-item:last-child { border-bottom: none; }
-      .detail-key { color: var(--text-muted); font-weight: 500; }
-      .detail-val { font-family: ui-monospace, SFMono-Regular, monospace; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem; }
-
-      .code-tag {
-        background: rgba(0, 0, 0, 0.3);
-        padding: 0.2rem 0.4rem;
-        border-radius: 0.35rem;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        color: var(--accent);
-      }
-
-      .copy-icon {
+      .list-row:last-child { border-bottom: none; }
+      .list-key { color: var(--muted); }
+      .list-val { font-family: ui-monospace, SFMono-Regular, monospace; color: var(--cyan); display: flex; align-items: center; gap: 0.4rem; }
+      .copy-btn {
+        background: transparent;
+        border: none;
+        color: var(--muted);
         cursor: pointer;
-        color: var(--text-muted);
-        transition: color 0.2s;
+        font-size: 0.85rem;
+        padding: 0.1rem 0.3rem;
+        border-radius: 0.3rem;
       }
-      .copy-icon:hover { color: var(--accent); }
+      .copy-btn:hover { color: var(--text); }
 
-      .troubleshoot-box {
-        background: rgba(239, 68, 68, 0.05);
-        border: 1px solid rgba(239, 68, 68, 0.2);
-        border-radius: 0.85rem;
+      .offline-banner {
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        border-radius: 0.75rem;
         padding: 1rem;
         margin-bottom: 1.25rem;
       }
-      .troubleshoot-title { font-size: 0.875rem; font-weight: 700; color: var(--danger); margin-bottom: 0.4rem; }
-      .troubleshoot-list { font-size: 0.825rem; color: var(--text-sub); line-height: 1.5; padding-left: 1.2rem; }
+      .offline-title { font-size: 0.85rem; font-weight: 700; color: var(--red); margin-bottom: 0.4rem; }
+      .offline-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.75rem; }
 
       .hidden { display: none !important; }
     </style>
   </head>
   <body>
-    <div class="container">
-      <!-- Header -->
+    <div class="card">
+      <!-- Header with Official CLIProxyAPI Logo -->
       <div class="header">
         <div class="brand">
-          <div class="brand-icon">CP</div>
+          <svg viewBox="0 0 256 257">
+            <defs>
+              <linearGradient id="g1" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%">
+                <stop offset="0%" stop-color="#41D1FF"/>
+                <stop offset="100%" stop-color="#BD34FE"/>
+              </linearGradient>
+              <linearGradient id="g2" x1="43.376%" x2="50.316%" y1="2.242%" y2="89.03%">
+                <stop offset="0%" stop-color="#FFEA83"/>
+                <stop offset="8.333%" stop-color="#FFDD35"/>
+                <stop offset="100%" stop-color="#FFA800"/>
+              </linearGradient>
+            </defs>
+            <path fill="url(#g1)" d="M255.153 37.938L134.897 252.976c-2.483 4.44-8.862 4.466-11.382.048L.875 37.958c-2.746-4.814 1.371-10.646 6.827-9.67l120.385 21.517a6.537 6.537 0 0 0 2.322-.004l117.867-21.483c5.438-.991 9.574 4.796 6.877 9.62Z"/>
+            <path fill="url(#g2)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"/>
+          </svg>
           <div>
-            <div class="brand-title">CLIProxyAPI</div>
-            <div class="brand-subtitle">Magisk / KernelSU Service</div>
+            <div class="brand-title">CLI Proxy API</div>
+            <div class="brand-sub">Management Center Gateway</div>
           </div>
         </div>
         <div id="statusBadge" class="badge badge-checking">
-          <span class="dot dot-pulse"></span>
+          <span class="dot"></span>
           <span id="statusText">Checking</span>
         </div>
       </div>
 
-      <!-- Quick Metrics Grid -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Service Version</div>
-          <div class="stat-value" id="valVersion">Loading...</div>
+      <!-- Native Info Grid -->
+      <div class="grid">
+        <div class="grid-item">
+          <div class="grid-label">Version</div>
+          <div class="grid-val" id="valVersion">Loading...</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Response Time</div>
-          <div class="stat-value" id="valLatency">-- ms</div>
+        <div class="grid-item">
+          <div class="grid-label">Latency</div>
+          <div class="grid-val" id="valLatency">-- ms</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Listener Address</div>
-          <div class="stat-value">0.0.0.0:8317</div>
+        <div class="grid-item">
+          <div class="grid-label">Host</div>
+          <div class="grid-val">0.0.0.0:8317</div>
         </div>
-        <div class="stat-card">
-          <div class="stat-label">Environment</div>
-          <div class="stat-value">Android Root</div>
+        <div class="grid-item">
+          <div class="grid-label">Runtime</div>
+          <div class="grid-val">Android Root</div>
         </div>
       </div>
 
-      <!-- Main Action Panel -->
-      <div id="onlinePanel" class="action-box hidden">
-        <div class="action-header">
-          <div class="action-title">Management Dashboard</div>
-          <div class="redirect-timer" id="timerNotice">Auto-redirecting in <strong id="timerVal">3</strong>s</div>
+      <!-- Online Management Banner -->
+      <div id="onlineBanner" class="action-banner hidden">
+        <div class="action-banner-title">
+          <span>Service Status: Healthy</span>
+          <span class="timer-text" id="timerText">Redirect in <strong id="timerVal">3</strong>s</span>
         </div>
-        <a id="openDashBtn" href="http://127.0.0.1:8317/management.html" class="btn btn-primary">
-          🚀 Open Full Management Center
+        <a id="openBtn" href="http://127.0.0.1:8317/management.html" class="btn btn-primary">
+          Open Management Center
         </a>
-        <button id="pauseBtn" class="btn btn-secondary" onclick="pauseAutoRedirect()">
-          ⏸ Stay on Gateway Control Panel
+        <button id="pauseBtn" class="btn btn-secondary" onclick="pauseRedirect()">
+          Stay on Gateway
         </button>
       </div>
 
-      <!-- Offline Troubleshooting Panel -->
-      <div id="offlinePanel" class="troubleshoot-box hidden">
-        <div class="troubleshoot-title">⚠️ Service Offline or Starting</div>
-        <ul class="troubleshoot-list">
-          <li>The API server on <code>127.0.0.1:8317</code> is currently unreachable.</li>
-          <li>Tap <strong>Action Button</strong> in KernelSU/Magisk to check logs.</li>
-          <li>Or run <code>cliproxyapi</code> in Termux to inspect status.</li>
-        </ul>
-        <button class="btn btn-primary" style="margin-top: 0.75rem;" onclick="checkHealth()">
-          🔄 Refresh Connection Status
+      <!-- Offline Recovery Banner -->
+      <div id="offlineBanner" class="offline-banner hidden">
+        <div class="offline-title">Service Offline</div>
+        <div class="offline-desc">
+          CLIProxyAPI service is not responding on port <code>8317</code>. Check KSU/Magisk Action button or run <code>cliproxyapi</code> in Termux.
+        </div>
+        <button class="btn btn-primary" onclick="checkHealth()">
+          Retry Connection
         </button>
       </div>
 
-      <!-- System Details & Copy Shortcuts -->
-      <div class="section-title">API Endpoints & Cheatsheet</div>
-      <div class="detail-list">
-        <div class="detail-item">
-          <span class="detail-key">API Base URL</span>
-          <span class="detail-val">
-            <span class="code-tag">http://127.0.0.1:8317/v1</span>
-            <span class="copy-icon" onclick="copyText('http://127.0.0.1:8317/v1', this)" title="Copy API URL">📋</span>
+      <!-- Cheatsheet & Endpoints -->
+      <div class="section-label">API Endpoints</div>
+      <div class="list">
+        <div class="list-row">
+          <span class="list-key">Base URL</span>
+          <span class="list-val">
+            http://127.0.0.1:8317/v1
+            <button class="copy-btn" onclick="copyVal('http://127.0.0.1:8317/v1', this)">📋</button>
           </span>
         </div>
-        <div class="detail-item">
-          <span class="detail-key">Health Endpoint</span>
-          <span class="detail-val">
-            <span class="code-tag">/healthz</span>
-            <span class="copy-icon" onclick="copyText('http://127.0.0.1:8317/healthz', this)" title="Copy Health URL">📋</span>
+        <div class="list-row">
+          <span class="list-key">Healthz</span>
+          <span class="list-val">
+            /healthz
+            <button class="copy-btn" onclick="copyVal('http://127.0.0.1:8317/healthz', this)">📋</button>
           </span>
         </div>
-        <div class="detail-item">
-          <span class="detail-key">Termux Command</span>
-          <span class="detail-val">
-            <span class="code-tag">cliproxyapi</span>
-            <span class="copy-icon" onclick="copyText('cliproxyapi', this)" title="Copy Command">📋</span>
+        <div class="list-row">
+          <span class="list-key">Termux Helper</span>
+          <span class="list-val">
+            cliproxyapi
+            <button class="copy-btn" onclick="copyVal('cliproxyapi', this)">📋</button>
           </span>
         </div>
-        <div class="detail-item">
-          <span class="detail-key">Password Helper</span>
-          <span class="detail-val">
-            <span class="code-tag">cliproxyapi dashboard-password</span>
-            <span class="copy-icon" onclick="copyText('cliproxyapi dashboard-password', this)" title="Copy Password Helper">📋</span>
+        <div class="list-row">
+          <span class="list-key">Set Password</span>
+          <span class="list-val">
+            cliproxyapi dashboard-password
+            <button class="copy-btn" onclick="copyVal('cliproxyapi dashboard-password', this)">📋</button>
           </span>
         </div>
       </div>
@@ -301,65 +297,56 @@
       let redirectTimer = null;
       let countdown = 3;
       let isPaused = false;
-      let autoPollTimer = null;
+      let pollTimer = null;
 
       async function checkHealth() {
         const badge = document.getElementById('statusBadge');
         const statusText = document.getElementById('statusText');
-        const onlinePanel = document.getElementById('onlinePanel');
-        const offlinePanel = document.getElementById('offlinePanel');
+        const onlineBanner = document.getElementById('onlineBanner');
+        const offlineBanner = document.getElementById('offlineBanner');
         const valVersion = document.getElementById('valVersion');
         const valLatency = document.getElementById('valLatency');
 
         badge.className = 'badge badge-checking';
         statusText.innerText = 'Checking';
 
-        const startTime = performance.now();
+        const t0 = performance.now();
         try {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2500);
+          const tid = setTimeout(() => controller.abort(), 2500);
           const res = await fetch(HEALTH_URL, { signal: controller.signal, cache: 'no-store' });
-          clearTimeout(timeoutId);
-          const endTime = performance.now();
-          const latency = Math.round(endTime - startTime);
+          clearTimeout(tid);
+          const t1 = performance.now();
 
           if (res.ok) {
             badge.className = 'badge badge-online';
             statusText.innerText = 'Online';
 
-            // Extract Version headers if available
             const ver = res.headers.get('X-CPA-VERSION') || res.headers.get('X-SERVER-VERSION') || 'Active';
             valVersion.innerText = ver;
-            valLatency.innerText = `${latency} ms`;
+            valLatency.innerText = `${Math.round(t1 - t0)} ms`;
 
-            offlinePanel.classList.add('hidden');
-            onlinePanel.classList.remove('hidden');
+            offlineBanner.classList.add('hidden');
+            onlineBanner.classList.remove('hidden');
 
-            if (autoPollTimer) { clearInterval(autoPollTimer); autoPollTimer = null; }
-
-            if (!isPaused && !redirectTimer) {
-              startRedirectCountdown();
-            }
+            if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+            if (!isPaused && !redirectTimer) startTimer();
             return;
           }
-        } catch (e) {
-          // Offline
-        }
+        } catch (e) {}
 
         badge.className = 'badge badge-offline';
         statusText.innerText = 'Offline';
         valVersion.innerText = 'Stopped';
         valLatency.innerText = '-- ms';
 
-        onlinePanel.classList.add('hidden');
-        offlinePanel.classList.remove('hidden');
+        onlineBanner.classList.add('hidden');
+        offlineBanner.classList.remove('hidden');
 
-        if (!autoPollTimer) {
-          autoPollTimer = setInterval(checkHealth, 4000);
-        }
+        if (!pollTimer) pollTimer = setInterval(checkHealth, 4000);
       }
 
-      function startRedirectCountdown() {
+      function startTimer() {
         const timerVal = document.getElementById('timerVal');
         redirectTimer = setInterval(() => {
           countdown--;
@@ -371,20 +358,18 @@
         }, 1000);
       }
 
-      function pauseAutoRedirect() {
+      function pauseRedirect() {
         isPaused = true;
         if (redirectTimer) { clearInterval(redirectTimer); redirectTimer = null; }
-        const timerNotice = document.getElementById('timerNotice');
-        if (timerNotice) timerNotice.innerText = 'Auto-redirect paused';
-        const pauseBtn = document.getElementById('pauseBtn');
-        if (pauseBtn) pauseBtn.classList.add('hidden');
+        document.getElementById('timerText').innerText = 'Auto-redirect paused';
+        document.getElementById('pauseBtn').classList.add('hidden');
       }
 
-      function copyText(text, iconEl) {
+      function copyVal(text, btn) {
         navigator.clipboard.writeText(text).then(() => {
-          const orig = iconEl.innerText;
-          iconEl.innerText = '✅';
-          setTimeout(() => iconEl.innerText = orig, 1500);
+          const orig = btn.innerText;
+          btn.innerText = '✓';
+          setTimeout(() => btn.innerText = orig, 1500);
         }).catch(() => {});
       }
 
