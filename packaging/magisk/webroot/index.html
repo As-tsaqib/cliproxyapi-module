@@ -1,190 +1,235 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CLI Proxy API Management Center</title>
     <style>
       :root {
-        --bg: #090b10;
-        --card: #111722;
-        --card-sub: #182030;
-        --border: #263043;
-        --text: #e8eefc;
-        --muted: #8b9bb4;
-        --cyan: #22d3ee;
-        --cyan-dark: #0891b2;
-        --green: #10b981;
-        --red: #ef4444;
-        --yellow: #f59e0b;
+        --bg-primary: #1d1b18;
+        --bg-secondary: #151412;
+        --bg-tertiary: #262320;
+        --bg-hover: #2e2a26;
+        --text-primary: #ece9e3;
+        --text-secondary: #a29c95;
+        --text-tertiary: #757069;
+        --border-color: #2e2b26;
+        --primary-color: #8b8680;
+        --success-color: #10b981;
+        --warning-color: #d97706;
+        --error-color: #c65746;
+        --radius-md: 10px;
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       }
+      @media (prefers-color-scheme: light) {
+        :root:not([data-theme="dark"]) {
+          --bg-primary: #f0eee8;
+          --bg-secondary: #faf9f5;
+          --bg-tertiary: #e9e6df;
+          --bg-hover: #e3dfd7;
+          --text-primary: #2d2a26;
+          --text-secondary: #6d6760;
+          --text-tertiary: #a29c95;
+          --border-color: #e3e1db;
+        }
+      }
+
       * { box-sizing: border-box; margin: 0; padding: 0; }
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        background-color: var(--bg);
-        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Helvetica Neue", sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
         min-height: 100vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 1.25rem;
+        padding: 1rem;
+        -webkit-font-smoothing: antialiased;
       }
-      .card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: 1rem;
+
+      .SystemPage-card {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
         width: 100%;
-        max-width: 30rem;
+        max-width: 32rem;
         padding: 1.5rem;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 12px 26px rgba(0, 0, 0, 0.25);
       }
-      .header {
+
+      .SystemPage-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding-bottom: 1rem;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--border-color);
         margin-bottom: 1.25rem;
       }
-      .brand {
+
+      .SystemPage-brand {
         display: flex;
         align-items: center;
         gap: 0.75rem;
       }
-      .brand svg {
+      .SystemPage-brand svg {
         width: 32px;
         height: 32px;
         flex-shrink: 0;
       }
-      .brand-title {
+      .SystemPage-title {
         font-size: 1.1rem;
         font-weight: 700;
-        color: var(--text);
+        color: var(--text-primary);
         line-height: 1.2;
       }
-      .brand-sub {
+      .SystemPage-sub {
         font-size: 0.75rem;
-        color: var(--muted);
+        color: var(--text-secondary);
       }
-      .badge {
+
+      .Badge-pill {
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        padding: 0.25rem 0.65rem;
+        gap: 0.35rem;
+        padding: 2px 10px;
         border-radius: 9999px;
-        font-size: 0.75rem;
+        font-size: 12px;
         font-weight: 600;
+        line-height: 1.4;
       }
-      .badge-checking { background: rgba(245, 158, 11, 0.15); color: var(--yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
-      .badge-online { background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid rgba(16, 185, 129, 0.3); }
-      .badge-offline { background: rgba(239, 68, 68, 0.15); color: var(--red); border: 1px solid rgba(239, 68, 68, 0.3); }
-      .dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; }
+      .Badge-checking { background: rgba(217, 119, 6, 0.15); color: var(--warning-color); border: 1px solid rgba(217, 119, 6, 0.3); }
+      .Badge-online { background: rgba(16, 185, 129, 0.15); color: var(--success-color); border: 1px solid rgba(16, 185, 129, 0.3); }
+      .Badge-offline { background: rgba(198, 87, 70, 0.15); color: var(--error-color); border: 1px solid rgba(198, 87, 70, 0.3); }
+      .Badge-dot { width: 6px; height: 6px; border-radius: 50%; background-color: currentColor; }
 
-      .grid {
+      .SystemPage-infoGrid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 0.75rem;
         margin-bottom: 1.25rem;
       }
-      .grid-item {
-        background: var(--card-sub);
-        border: 1px solid var(--border);
-        border-radius: 0.75rem;
+      .SystemPage-infoTile {
+        background: color-mix(in srgb, var(--bg-tertiary) 60%, var(--bg-secondary));
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
         padding: 0.75rem 0.9rem;
       }
-      .grid-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.2rem; }
-      .grid-val { font-size: 0.9rem; font-weight: 600; font-family: ui-monospace, SFMono-Regular, monospace; color: var(--text); }
+      .SystemPage-infoLabel {
+        font-size: 12px;
+        color: var(--text-secondary);
+        margin-bottom: 0.2rem;
+      }
+      .SystemPage-infoVal {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: var(--font-mono);
+        color: var(--text-primary);
+      }
 
-      .action-banner {
-        background: rgba(34, 211, 238, 0.08);
-        border: 1px solid rgba(34, 211, 238, 0.25);
-        border-radius: 0.75rem;
+      .ActionBanner {
+        background: color-mix(in srgb, var(--bg-tertiary) 80%, var(--bg-secondary));
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
         padding: 1rem;
         margin-bottom: 1.25rem;
       }
-      .action-banner-title {
-        font-size: 0.85rem;
+      .ActionBanner-title {
+        font-size: 13px;
         font-weight: 600;
-        color: var(--cyan);
+        color: var(--text-primary);
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 0.75rem;
       }
-      .timer-text { font-size: 0.8rem; color: var(--muted); font-weight: normal; }
+      .ActionBanner-timer { font-size: 12px; color: var(--text-tertiary); font-weight: normal; }
 
       .btn {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 100%;
-        padding: 0.75rem 1rem;
-        border-radius: 0.6rem;
-        font-weight: 700;
-        font-size: 0.9rem;
+        padding: 0.65rem 1rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 13px;
         text-align: center;
         text-decoration: none;
         cursor: pointer;
         border: none;
-        transition: background 0.15s ease;
+        transition: background-color 0.15s ease, border-color 0.15s ease;
       }
-      .btn-primary { background: var(--cyan); color: #051016; }
-      .btn-primary:hover { background: var(--cyan-dark); color: #ffffff; }
-      .btn-secondary { background: var(--card-sub); color: var(--text); border: 1px solid var(--border); margin-top: 0.5rem; }
-      .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); }
+      .btn-primary {
+        background: var(--text-primary);
+        color: var(--bg-secondary);
+      }
+      .btn-primary:hover {
+        background: color-mix(in srgb, var(--text-primary) 86%, var(--bg-secondary));
+      }
+      .btn-secondary {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        margin-top: 0.5rem;
+      }
+      .btn-secondary:hover {
+        background: var(--bg-hover);
+      }
 
-      .section-label {
-        font-size: 0.75rem;
+      .SectionHeader {
+        font-size: 12px;
         font-weight: 700;
-        color: var(--muted);
+        color: var(--text-tertiary);
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-bottom: 0.5rem;
       }
-      .list {
-        background: var(--card-sub);
-        border: 1px solid var(--border);
-        border-radius: 0.75rem;
+      .DetailList {
+        background: color-mix(in srgb, var(--bg-tertiary) 50%, var(--bg-secondary));
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
         overflow: hidden;
       }
-      .list-row {
+      .DetailRow {
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0.65rem 0.85rem;
-        border-bottom: 1px solid var(--border);
-        font-size: 0.825rem;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 13px;
       }
-      .list-row:last-child { border-bottom: none; }
-      .list-key { color: var(--muted); }
-      .list-val { font-family: ui-monospace, SFMono-Regular, monospace; color: var(--cyan); display: flex; align-items: center; gap: 0.4rem; }
-      .copy-btn {
+      .DetailRow:last-child { border-bottom: none; }
+      .DetailKey { color: var(--text-secondary); }
+      .DetailVal { font-family: var(--font-mono); color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; }
+      .CopyBtn {
         background: transparent;
         border: none;
-        color: var(--muted);
+        color: var(--text-tertiary);
         cursor: pointer;
-        font-size: 0.85rem;
-        padding: 0.1rem 0.3rem;
-        border-radius: 0.3rem;
+        font-size: 13px;
+        padding: 1px 5px;
+        border-radius: 4px;
       }
-      .copy-btn:hover { color: var(--text); }
+      .CopyBtn:hover { color: var(--text-primary); background: var(--bg-hover); }
 
-      .offline-banner {
-        background: rgba(239, 68, 68, 0.08);
-        border: 1px solid rgba(239, 68, 68, 0.25);
-        border-radius: 0.75rem;
+      .OfflineBanner {
+        background: rgba(198, 87, 70, 0.08);
+        border: 1px solid rgba(198, 87, 70, 0.3);
+        border-radius: var(--radius-md);
         padding: 1rem;
         margin-bottom: 1.25rem;
       }
-      .offline-title { font-size: 0.85rem; font-weight: 700; color: var(--red); margin-bottom: 0.4rem; }
-      .offline-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; margin-bottom: 0.75rem; }
+      .OfflineTitle { font-size: 13px; font-weight: 700; color: var(--error-color); margin-bottom: 0.3rem; }
+      .OfflineDesc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.75rem; }
 
       .hidden { display: none !important; }
     </style>
   </head>
   <body>
-    <div class="card">
+    <div class="SystemPage-card">
       <!-- Header with Official CLIProxyAPI Logo -->
-      <div class="header">
-        <div class="brand">
+      <div class="SystemPage-header">
+        <div class="SystemPage-brand">
           <svg viewBox="0 0 256 257">
             <defs>
               <linearGradient id="g1" x1="-.828%" x2="57.636%" y1="7.652%" y2="78.411%">
@@ -201,41 +246,41 @@
             <path fill="url(#g2)" d="M185.432.063L96.44 17.501a3.268 3.268 0 0 0-2.634 3.014l-5.474 92.456a3.268 3.268 0 0 0 3.997 3.378l24.777-5.718c2.318-.535 4.413 1.507 3.936 3.838l-7.361 36.047c-.495 2.426 1.782 4.5 4.151 3.78l15.304-4.649c2.372-.72 4.652 1.36 4.15 3.788l-11.698 56.621c-.732 3.542 3.979 5.473 5.943 2.437l1.313-2.028l72.516-144.72c1.215-2.423-.88-5.186-3.54-4.672l-25.505 4.922c-2.396.462-4.435-1.77-3.759-4.114l16.646-57.705c.677-2.35-1.37-4.583-3.769-4.113Z"/>
           </svg>
           <div>
-            <div class="brand-title">CLI Proxy API</div>
-            <div class="brand-sub">Management Center Gateway</div>
+            <div class="SystemPage-title">CLI Proxy API</div>
+            <div class="SystemPage-sub">Management Center Gateway</div>
           </div>
         </div>
-        <div id="statusBadge" class="badge badge-checking">
-          <span class="dot"></span>
+        <div id="statusBadge" class="Badge-pill Badge-checking">
+          <span class="Badge-dot"></span>
           <span id="statusText">Checking</span>
         </div>
       </div>
 
       <!-- Native Info Grid -->
-      <div class="grid">
-        <div class="grid-item">
-          <div class="grid-label">Version</div>
-          <div class="grid-val" id="valVersion">Loading...</div>
+      <div class="SystemPage-infoGrid">
+        <div class="SystemPage-infoTile">
+          <div class="SystemPage-infoLabel">Version</div>
+          <div class="SystemPage-infoVal" id="valVersion">Loading...</div>
         </div>
-        <div class="grid-item">
-          <div class="grid-label">Latency</div>
-          <div class="grid-val" id="valLatency">-- ms</div>
+        <div class="SystemPage-infoTile">
+          <div class="SystemPage-infoLabel">Latency</div>
+          <div class="SystemPage-infoVal" id="valLatency">-- ms</div>
         </div>
-        <div class="grid-item">
-          <div class="grid-label">Host</div>
-          <div class="grid-val">0.0.0.0:8317</div>
+        <div class="SystemPage-infoTile">
+          <div class="SystemPage-infoLabel">Listener Address</div>
+          <div class="SystemPage-infoVal">0.0.0.0:8317</div>
         </div>
-        <div class="grid-item">
-          <div class="grid-label">Runtime</div>
-          <div class="grid-val">Android Root</div>
+        <div class="SystemPage-infoTile">
+          <div class="SystemPage-infoLabel">Runtime</div>
+          <div class="SystemPage-infoVal">Android Root</div>
         </div>
       </div>
 
       <!-- Online Management Banner -->
-      <div id="onlineBanner" class="action-banner hidden">
-        <div class="action-banner-title">
+      <div id="onlineBanner" class="ActionBanner hidden">
+        <div class="ActionBanner-title">
           <span>Service Status: Healthy</span>
-          <span class="timer-text" id="timerText">Redirect in <strong id="timerVal">3</strong>s</span>
+          <span class="ActionBanner-timer" id="timerText">Redirect in <strong id="timerVal">3</strong>s</span>
         </div>
         <a id="openBtn" href="http://127.0.0.1:8317/management.html" class="btn btn-primary">
           Open Management Center
@@ -246,9 +291,9 @@
       </div>
 
       <!-- Offline Recovery Banner -->
-      <div id="offlineBanner" class="offline-banner hidden">
-        <div class="offline-title">Service Offline</div>
-        <div class="offline-desc">
+      <div id="offlineBanner" class="OfflineBanner hidden">
+        <div class="OfflineTitle">Service Offline</div>
+        <div class="OfflineDesc">
           CLIProxyAPI service is not responding on port <code>8317</code>. Check KSU/Magisk Action button or run <code>cliproxyapi</code> in Termux.
         </div>
         <button class="btn btn-primary" onclick="checkHealth()">
@@ -257,34 +302,34 @@
       </div>
 
       <!-- Cheatsheet & Endpoints -->
-      <div class="section-label">API Endpoints</div>
-      <div class="list">
-        <div class="list-row">
-          <span class="list-key">Base URL</span>
-          <span class="list-val">
+      <div class="SectionHeader">API Endpoints</div>
+      <div class="DetailList">
+        <div class="DetailRow">
+          <span class="DetailKey">Base URL</span>
+          <span class="DetailVal">
             http://127.0.0.1:8317/v1
-            <button class="copy-btn" onclick="copyVal('http://127.0.0.1:8317/v1', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/v1', this)">📋</button>
           </span>
         </div>
-        <div class="list-row">
-          <span class="list-key">Healthz</span>
-          <span class="list-val">
+        <div class="DetailRow">
+          <span class="DetailKey">Healthz</span>
+          <span class="DetailVal">
             /healthz
-            <button class="copy-btn" onclick="copyVal('http://127.0.0.1:8317/healthz', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/healthz', this)">📋</button>
           </span>
         </div>
-        <div class="list-row">
-          <span class="list-key">Termux Helper</span>
-          <span class="list-val">
+        <div class="DetailRow">
+          <span class="DetailKey">Termux Helper</span>
+          <span class="DetailVal">
             cliproxyapi
-            <button class="copy-btn" onclick="copyVal('cliproxyapi', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('cliproxyapi', this)">📋</button>
           </span>
         </div>
-        <div class="list-row">
-          <span class="list-key">Set Password</span>
-          <span class="list-val">
+        <div class="DetailRow">
+          <span class="DetailKey">Set Password</span>
+          <span class="DetailVal">
             cliproxyapi dashboard-password
-            <button class="copy-btn" onclick="copyVal('cliproxyapi dashboard-password', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('cliproxyapi dashboard-password', this)">📋</button>
           </span>
         </div>
       </div>
@@ -307,7 +352,7 @@
         const valVersion = document.getElementById('valVersion');
         const valLatency = document.getElementById('valLatency');
 
-        badge.className = 'badge badge-checking';
+        badge.className = 'Badge-pill Badge-checking';
         statusText.innerText = 'Checking';
 
         const t0 = performance.now();
@@ -319,7 +364,7 @@
           const t1 = performance.now();
 
           if (res.ok) {
-            badge.className = 'badge badge-online';
+            badge.className = 'Badge-pill Badge-online';
             statusText.innerText = 'Online';
 
             const ver = res.headers.get('X-CPA-VERSION') || res.headers.get('X-SERVER-VERSION') || 'Active';
@@ -335,7 +380,7 @@
           }
         } catch (e) {}
 
-        badge.className = 'badge badge-offline';
+        badge.className = 'Badge-pill Badge-offline';
         statusText.innerText = 'Offline';
         valVersion.innerText = 'Stopped';
         valLatency.innerText = '-- ms';
