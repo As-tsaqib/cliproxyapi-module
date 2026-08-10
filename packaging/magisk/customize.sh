@@ -4,7 +4,7 @@ SKIPUNZIP=0
 DATADIR=/data/adb/cliproxyapi
 BIN="$MODPATH/bin/cli-proxy-api"
 
-ui_print "- CLIProxyAPI Magisk"
+ui_print "- CLIProxyAPI"
 ui_print "- Author: As-tsaqib"
 ui_print "- Arch: $ARCH"
 
