@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+export PATH=/system/bin:/system/xbin:/vendor/bin:$PATH
+
 DATA_DIR=/data/adb/cliproxyapi
 MODULE_DIR=/data/adb/modules/cliproxyapi
 BIN=$MODULE_DIR/bin/cli-proxy-api
@@ -18,11 +20,11 @@ YELLOW='\033[33m'
 RED='\033[31m'
 CYAN='\033[36m'
 GRAY='\033[90m'
+WHITE='\033[97m'
 
-ok() { printf '%b\n' "${GREEN}✓${RESET} $*"; }
-warn() { printf '%b\n' "${YELLOW}⚠${RESET} $*"; }
-fail() { printf '%b\n' "${RED}✗${RESET} $*"; }
-info() { printf '%b\n' "${CYAN}›${RESET} $*"; }
+ok()   { printf '%b\n' "  ${GREEN}✓${RESET} $*"; }
+warn() { printf '%b\n' "  ${YELLOW}⚠${RESET} $*"; }
+fail() { printf '%b\n' "  ${RED}✗${RESET} $*"; }
 
 pid_alive() {
   file=$1
@@ -54,82 +56,103 @@ port_listening() {
 health_reachable() {
   if command -v curl >/dev/null 2>&1; then
     HTTP_CLIENT=curl
-    curl -fsS --max-time 5 "$URL" >/dev/null 2>&1
+    curl -fsS --max-time 3 "$URL" >/dev/null 2>&1
     return $?
   fi
   if command -v wget >/dev/null 2>&1; then
     HTTP_CLIENT=wget
-    wget -q -T 5 -O /dev/null "$URL" >/dev/null 2>&1
+    wget -q -T 3 -O /dev/null "$URL" >/dev/null 2>&1
     return $?
   fi
   HTTP_CLIENT=none
   return 2
 }
 
-printf '%b\n' "${BOLD}${CYAN}CLIProxyAPI Health Check${RESET}"
-printf '%b\n' "${GRAY}$(date)${RESET}"
+printf '%b\n' "${CYAN}═════════════════════════════════════════════════════════${RESET}"
+printf '%b\n' "${BOLD}${WHITE}   CLIProxyAPI Control & Diagnostic Panel${RESET}"
+printf '%b\n' "${CYAN}═════════════════════════════════════════════════════════${RESET}"
+printf '%b\n' "${GRAY} Date: $(date)${RESET}"
 echo
 
-if [ -x "$BIN" ]; then
-  ok "binary installed: $BIN"
-else
-  fail "binary missing: $BIN"
-fi
+printf '%b\n' "${BOLD}${WHITE}[SYSTEM STATUS]${RESET}"
 
-if pid_alive "$WATCHDOG_PID_FILE" "$MODULE_DIR/watchdog.sh"; then
-  ok "watchdog running: pid $(cat "$WATCHDOG_PID_FILE" 2>/dev/null)"
+if [ -x "$BIN" ]; then
+  ok "Binary Installed  : ${GRAY}$BIN${RESET}"
 else
-  fail "watchdog not running"
+  fail "Binary Missing    : ${RED}$BIN${RESET}"
 fi
 
 if pid_alive "$APP_PID_FILE" "$BIN"; then
-  ok "cli-proxy-api running: pid $(cat "$APP_PID_FILE" 2>/dev/null)"
+  app_pid=$(cat "$APP_PID_FILE" 2>/dev/null)
+  ok "Service Daemon    : ${GREEN}RUNNING${RESET} ${GRAY}(PID: $app_pid)${RESET}"
 else
-  fail "cli-proxy-api not running"
+  fail "Service Daemon    : ${RED}STOPPED / CRASHED${RESET}"
+fi
+
+if pid_alive "$WATCHDOG_PID_FILE" "$MODULE_DIR/watchdog.sh"; then
+  wd_pid=$(cat "$WATCHDOG_PID_FILE" 2>/dev/null)
+  ok "Watchdog Guard    : ${GREEN}ACTIVE${RESET} ${GRAY}(PID: $wd_pid)${RESET}"
+else
+  fail "Watchdog Guard    : ${RED}STOPPED${RESET}"
 fi
 
 if port_listening; then
-  ok "API TCP port listening: 8317"
+  ok "TCP Listener      : ${GREEN}0.0.0.0:8317${RESET} ${GRAY}(ONLINE)${RESET}"
 else
-  fail "API TCP port not listening: 8317"
+  fail "TCP Listener      : ${RED}OFFLINE (Port 8317)${RESET}"
 fi
 
 health_reachable
 health_status=$?
 case "$health_status" in
-  0) ok "health endpoint reachable via $HTTP_CLIENT: $URL" ;;
-  2) warn "health endpoint not requested: curl/wget unavailable" ;;
-  *) fail "health endpoint unreachable via $HTTP_CLIENT: $URL" ;;
+  0) ok "Health Endpoint   : ${GREEN}200 OK${RESET} ${GRAY}($URL via $HTTP_CLIENT)${RESET}" ;;
+  2) warn "Health Endpoint   : ${YELLOW}NOT PROBED${RESET} ${GRAY}(curl/wget unavailable)${RESET}" ;;
+  *) fail "Health Endpoint   : ${RED}UNREACHABLE${RESET} ${GRAY}($URL)${RESET}" ;;
 esac
 
 if [ -f "$DASHBOARD" ]; then
-  ok "dashboard bundled: $DASHBOARD"
+  ok "Dashboard WebUI   : ${GREEN}INSTALLED${RESET}"
 else
-  warn "dashboard file missing: $DASHBOARD"
+  warn "Dashboard WebUI   : ${YELLOW}MISSING FILE${RESET}"
 fi
 
 if [ -f "$DATA_DIR/disable" ]; then
-  warn "autostart disabled: $DATA_DIR/disable"
+  warn "Boot Autostart    : ${YELLOW}DISABLED${RESET}"
 else
-  ok "autostart enabled"
+  ok "Boot Autostart    : ${GREEN}ENABLED${RESET}"
 fi
 
 echo
-printf '%b\n' "${BOLD}Dashboard${RESET}"
-info "$DASHBOARD_URL"
+printf '%b\n' "${BOLD}${WHITE}[QUICK SHORTCUTS]${RESET}"
+printf '%b\n' "  ${CYAN}•${RESET} Web Dashboard     : ${WHITE}$DASHBOARD_URL${RESET}"
+printf '%b\n' "  ${CYAN}•${RESET} Termux Command    : ${WHITE}cliproxyapi${RESET}"
+printf '%b\n' "  ${CYAN}•${RESET} Change Password   : ${WHITE}cliproxyapi dashboard-password${RESET}"
 
 echo
-printf '%b\n' "${BOLD}Recent Watchdog Log${RESET}"
+printf '%b\n' "${BOLD}${WHITE}[RECENT LOGS]${RESET}"
+
 if [ -f "$WATCHDOG_LOG" ]; then
-  tail -20 "$WATCHDOG_LOG"
+  last_wd=$(grep -E 'started|stopped|restarted' "$WATCHDOG_LOG" 2>/dev/null | tail -2 | sed 's/^/    /')
+  if [ -n "$last_wd" ]; then
+    printf '%b\n' "  ${CYAN}•${RESET} Watchdog Activity:"
+    printf '%b\n' "${GRAY}$last_wd${RESET}"
+  else
+    printf '%b\n' "  ${CYAN}•${RESET} Watchdog Activity: ${GRAY}No recent events${RESET}"
+  fi
 else
-  warn "log not found: $WATCHDOG_LOG"
+  warn "Watchdog Log      : ${YELLOW}Not found${RESET}"
 fi
 
-echo
-printf '%b\n' "${BOLD}Recent App Log${RESET}"
 if [ -f "$APP_LOG" ]; then
-  tail -20 "$APP_LOG"
+  last_app=$(grep -i 'started\|updated\|error' "$APP_LOG" 2>/dev/null | tail -3 | sed 's/^/    /')
+  if [ -n "$last_app" ]; then
+    printf '%b\n' "  ${CYAN}•${RESET} Service Activity:"
+    printf '%b\n' "${GRAY}$last_app${RESET}"
+  else
+    printf '%b\n' "  ${CYAN}•${RESET} Service Activity: ${GRAY}No recent log entries${RESET}"
+  fi
 else
-  warn "log not found: $APP_LOG"
+  warn "Service Log       : ${YELLOW}Not found${RESET}"
 fi
+
+printf '%b\n' "${CYAN}═════════════════════════════════════════════════════════${RESET}"
