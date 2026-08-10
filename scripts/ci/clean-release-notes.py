@@ -20,6 +20,19 @@ def main():
             flags=re.DOTALL | re.IGNORECASE,
         ).strip()
 
+    # Format Full Changelog URL into an explicit clickable Markdown link: [URL](URL)
+    def link_repl(m):
+        prefix = m.group(1)
+        url = m.group(2)
+        return f"{prefix}[{url}]({url})"
+
+    changelog = re.sub(
+        r"(\*?\*?Full Changelog\*?\*?:?\s*)(?<!\[)(https://[^\s\)]+)(?!\))",
+        link_repl,
+        changelog,
+        flags=re.IGNORECASE,
+    )
+
     print(changelog)
 
 if __name__ == "__main__":
