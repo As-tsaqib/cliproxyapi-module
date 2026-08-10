@@ -20,14 +20,21 @@ def main():
             flags=re.DOTALL | re.IGNORECASE,
         ).strip()
 
-    # Format Full Changelog URL into an explicit clickable Markdown link: [URL](URL)
+    # Remove top '## Changelog' header to prevent duplicated header inside KernelSU dialog
+    changelog = re.sub(
+        r"^#*\s*(Changelog|What['’]s\s+Changed)\s*\n+",
+        "",
+        changelog,
+        flags=re.IGNORECASE,
+    ).strip()
+
+    # Format Full Changelog URL into an explicit clean clickable Markdown link: [Full Changelog](URL)
     def link_repl(m):
-        prefix = m.group(1)
         url = m.group(2)
-        return f"{prefix}[{url}]({url})"
+        return f"[Full Changelog]({url})"
 
     changelog = re.sub(
-        r"(\*?\*?Full Changelog\*?\*?:?\s*)(?<!\[)(https://[^\s\)]+)(?!\))",
+        r"(\*?\*?Full Changelog\*?\*?:?\s*)(https://[^\s\)]+)",
         link_repl,
         changelog,
         flags=re.IGNORECASE,
