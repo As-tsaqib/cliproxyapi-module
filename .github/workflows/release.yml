@@ -351,7 +351,7 @@ jobs:
 
           upstream_notes=$(gh api \
             "repos/router-for-me/CLIProxyAPI/releases/tags/$UPSTREAM_TAG" \
-            --jq '.body // ""' | python3 ./scripts/ci/clean-release-notes.py)
+            --jq '.body // ""' | python3 "$GITHUB_WORKSPACE/cliproxyapi-magisk/scripts/ci/clean-release-notes.py")
 
           {
             if [ -n "$upstream_notes" ]; then
