@@ -214,16 +214,27 @@
       .DetailRow:last-child { border-bottom: none; }
       .DetailKey { color: var(--text-secondary); }
       .DetailVal { font-family: var(--font-mono); color: var(--text-primary); display: flex; align-items: center; gap: 0.4rem; }
+      
       .CopyBtn {
         background: transparent;
         border: none;
         color: var(--text-tertiary);
         cursor: pointer;
-        font-size: 13px;
-        padding: 1px 5px;
+        padding: 3px 6px;
         border-radius: 4px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.15s ease, background-color 0.15s ease;
       }
-      .CopyBtn:hover { color: var(--text-primary); background: var(--bg-hover); }
+      .CopyBtn:hover {
+        color: var(--text-primary);
+        background: var(--bg-hover);
+      }
+      .CopyBtn svg {
+        width: 14px;
+        height: 14px;
+      }
 
       .CodeTag {
         background: rgba(245, 158, 11, 0.15);
@@ -350,7 +361,14 @@
           <span class="DetailKey">Change Password</span>
           <span class="DetailVal">
             cliproxyapi dashboard-password
-            <button class="CopyBtn" onclick="copyVal('cliproxyapi dashboard-password', this)" title="Copy Command">📋</button>
+            <button class="CopyBtn" onclick="copyVal('cliproxyapi dashboard-password', this)" title="Copy Command">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="13" height="15" rx="2.5"></rect>
+                <path d="M3 10h3M3 13.5h3M3 17h3"></path>
+                <rect x="8" y="3" width="13" height="15" rx="2.5"></rect>
+                <path d="M11 7h7M11 10.5h7M11 14h7"></path>
+              </svg>
+            </button>
           </span>
         </div>
       </div>
@@ -362,21 +380,42 @@
           <span class="DetailKey">Base URL</span>
           <span class="DetailVal">
             http://127.0.0.1:8317/v1
-            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/v1', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/v1', this)" title="Copy URL">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="13" height="15" rx="2.5"></rect>
+                <path d="M3 10h3M3 13.5h3M3 17h3"></path>
+                <rect x="8" y="3" width="13" height="15" rx="2.5"></rect>
+                <path d="M11 7h7M11 10.5h7M11 14h7"></path>
+              </svg>
+            </button>
           </span>
         </div>
         <div class="DetailRow">
           <span class="DetailKey">Healthz</span>
           <span class="DetailVal">
             /healthz
-            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/healthz', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('http://127.0.0.1:8317/healthz', this)" title="Copy URL">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="13" height="15" rx="2.5"></rect>
+                <path d="M3 10h3M3 13.5h3M3 17h3"></path>
+                <rect x="8" y="3" width="13" height="15" rx="2.5"></rect>
+                <path d="M11 7h7M11 10.5h7M11 14h7"></path>
+              </svg>
+            </button>
           </span>
         </div>
         <div class="DetailRow">
           <span class="DetailKey">Termux Helper</span>
           <span class="DetailVal">
             cliproxyapi
-            <button class="CopyBtn" onclick="copyVal('cliproxyapi', this)">📋</button>
+            <button class="CopyBtn" onclick="copyVal('cliproxyapi', this)" title="Copy Command">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="6" width="13" height="15" rx="2.5"></rect>
+                <path d="M3 10h3M3 13.5h3M3 17h3"></path>
+                <rect x="8" y="3" width="13" height="15" rx="2.5"></rect>
+                <path d="M11 7h7M11 10.5h7M11 14h7"></path>
+              </svg>
+            </button>
           </span>
         </div>
       </div>
@@ -459,9 +498,9 @@
 
       function copyVal(text, btn) {
         navigator.clipboard.writeText(text).then(() => {
-          const orig = btn.innerText;
-          btn.innerText = '✓';
-          setTimeout(() => btn.innerText = orig, 1500);
+          const orig = btn.innerHTML;
+          btn.innerHTML = '<span style="color: var(--success-color); font-weight: bold; font-size: 12px;">✓</span>';
+          setTimeout(() => btn.innerHTML = orig, 1500);
         }).catch(() => {});
       }
 
