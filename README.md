@@ -67,14 +67,6 @@ cliproxyapi -codex-device-login
 
 ---
 
-## 🛠️ Local Build
-
-```sh
-VERSION=v7.2.127 VERSION_CODE=700212700 ./packaging/magisk/build-module.sh
-```
-
----
-
 ## 📄 License
 
 Distributed under the [MIT License](LICENSE). Third-party software notices are available in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
