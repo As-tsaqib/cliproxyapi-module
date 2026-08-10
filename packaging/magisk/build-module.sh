@@ -37,6 +37,7 @@ cp "$ROOT/packaging/termux/cliproxyapi" "$STAGE/termux-wrapper.sh"
 cp "$ROOT/README.md" "$STAGE/README.md"
 cp "$ROOT/LICENSE" "$STAGE/LICENSE"
 cp "$ROOT/THIRD_PARTY_NOTICES.md" "$STAGE/THIRD_PARTY_NOTICES.md"
+[ -f "$ROOT/banner.png" ] && cp "$ROOT/banner.png" "$STAGE/banner.png"
 sed \
   -e "s/@VERSION@/$VERSION/g" \
   -e "s/@VERSION_CODE@/$VERSION_CODE/g" \
