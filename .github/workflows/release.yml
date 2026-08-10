@@ -351,16 +351,7 @@ jobs:
 
           upstream_notes=$(gh api \
             "repos/router-for-me/CLIProxyAPI/releases/tags/$UPSTREAM_TAG" \
-            --jq '.body // ""' | python3 -c '
-import sys, re
-body = sys.stdin.read()
-pos = re.search(r"#*\s*(Changelog|What\x27s Changed|What’s Changed)", body, re.IGNORECASE)
-if pos:
-    changelog = body[pos.start():].strip()
-else:
-    changelog = re.sub(r"#*\s*(Linux|FreeBSD|macOS|Windows)\s+release\s+assets.*?(?=\n#|\Z)", "", body, flags=re.DOTALL | re.IGNORECASE).strip()
-print(changelog)
-')
+            --jq '.body // ""' | python3 ./scripts/ci/clean-release-notes.py)
 
           {
             if [ -n "$upstream_notes" ]; then
