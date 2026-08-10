@@ -201,6 +201,7 @@
         border: 1px solid var(--border-color);
         border-radius: var(--radius-md);
         overflow: hidden;
+        margin-bottom: 1.25rem;
       }
       .DetailRow {
         display: flex;
@@ -224,6 +225,16 @@
       }
       .CopyBtn:hover { color: var(--text-primary); background: var(--bg-hover); }
 
+      .CodeTag {
+        background: rgba(245, 158, 11, 0.15);
+        color: var(--warning-color);
+        border: 1px solid rgba(217, 119, 6, 0.3);
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-family: var(--font-mono);
+      }
+
       .OfflineBanner {
         background: rgba(198, 87, 70, 0.08);
         border: 1px solid rgba(198, 87, 70, 0.3);
@@ -239,7 +250,7 @@
   </head>
   <body>
     <div class="SystemPage-card">
-      <!-- Header with Official CLIProxyAPI Gradient Logo Card -->
+      <!-- Official CLIProxyAPI Logo -->
       <div class="SystemPage-header">
         <div class="SystemPage-brand">
           <div class="Logo-card">
@@ -326,6 +337,24 @@
         </button>
       </div>
 
+      <!-- Dashboard Security Section -->
+      <div class="SectionHeader">Dashboard Security</div>
+      <div class="DetailList">
+        <div class="DetailRow">
+          <span class="DetailKey">Initial Password</span>
+          <span class="DetailVal">
+            <span class="CodeTag">admin123</span>
+          </span>
+        </div>
+        <div class="DetailRow">
+          <span class="DetailKey">Change Password</span>
+          <span class="DetailVal">
+            cliproxyapi dashboard-password
+            <button class="CopyBtn" onclick="copyVal('cliproxyapi dashboard-password', this)" title="Copy Command">📋</button>
+          </span>
+        </div>
+      </div>
+
       <!-- Cheatsheet & Endpoints -->
       <div class="SectionHeader">API Endpoints</div>
       <div class="DetailList">
@@ -348,13 +377,6 @@
           <span class="DetailVal">
             cliproxyapi
             <button class="CopyBtn" onclick="copyVal('cliproxyapi', this)">📋</button>
-          </span>
-        </div>
-        <div class="DetailRow">
-          <span class="DetailKey">Set Password</span>
-          <span class="DetailVal">
-            cliproxyapi dashboard-password
-            <button class="CopyBtn" onclick="copyVal('cliproxyapi dashboard-password', this)">📋</button>
           </span>
         </div>
       </div>
