@@ -351,35 +351,23 @@ jobs:
 
           upstream_notes=$(gh api \
             "repos/router-for-me/CLIProxyAPI/releases/tags/$UPSTREAM_TAG" \
-            --jq '.body // ""')
+            --jq '.body // ""' | python3 -c '
+import sys, re
+body = sys.stdin.read()
+pos = re.search(r"#*\s*(Changelog|What\x27s Changed|What’s Changed)", body, re.IGNORECASE)
+if pos:
+    changelog = body[pos.start():].strip()
+else:
+    changelog = re.sub(r"#*\s*(Linux|FreeBSD|macOS|Windows)\s+release\s+assets.*?(?=\n#|\Z)", "", body, flags=re.DOTALL | re.IGNORECASE).strip()
+print(changelog)
+')
 
           {
-            printf '%s\n' \
-              "# CLIProxyAPI Magisk $RELEASE_TAG" \
-              "" \
-              "ARM64 Android Magisk module built from upstream CLIProxyAPI $UPSTREAM_TAG." \
-              "" \
-              "## Upstream changes ($UPSTREAM_TAG)" \
-              ""
             if [ -n "$upstream_notes" ]; then
               printf '%s\n' "$upstream_notes"
             else
-              printf '%s\n' "No upstream release notes were provided."
+              printf '%s\n' "## Changelog" "" "Upstream release $UPSTREAM_TAG"
             fi
-            printf '%s\n' \
-              "" \
-              "## Build provenance" \
-              "" \
-              "- Upstream commit: \`$UPSTREAM_SHA\`" \
-              "- Upstream release: https://github.com/router-for-me/CLIProxyAPI/releases/tag/$UPSTREAM_TAG" \
-              "- Models commit: \`$MODELS_SHA\`" \
-              "- Dashboard release: \`$PANEL_TAG\`" \
-              "- Dashboard SHA-256: \`$PANEL_SHA256\`" \
-              "- Android NDK: \`$NDK_VERSION\`" \
-              "" \
-              "Full machine-readable provenance is attached as \`provenance.json\`." \
-              "" \
-              "Author: As-tsaqib."
           } > release-notes.md
 
       - name: Validate release assets
