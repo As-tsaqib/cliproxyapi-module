@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+export PATH=/system/bin:/system/xbin:/vendor/bin:$PATH
+
 MODDIR=${0%/*}
 DATADIR=/data/adb/cliproxyapi
 BINARY="$MODDIR/bin/cli-proxy-api"
@@ -7,6 +9,7 @@ CONFIG="$DATADIR/config.yaml"
 DEFAULT_CONFIG="$MODDIR/config/config.yaml"
 STATIC_DIR="$DATADIR/static"
 APP_LOG="$DATADIR/cliproxyapi.log"
+WATCHDOG_LOG="$DATADIR/watchdog.log"
 PIDFILE="$DATADIR/cliproxyapi.pid"
 DISABLE="$DATADIR/disable"
 STOP="$DATADIR/stop"
@@ -17,7 +20,18 @@ MAX_BACKOFF=300
 backoff=0
 started_at=0
 
+rotate_log() {
+  file=$1
+  [ -f "$file" ] || return 0
+  size=$(stat -c %s "$file" 2>/dev/null)
+  case "$size" in ''|*[!0-9]*) return 0 ;; esac
+  if [ "$size" -gt 2097152 ]; then
+    tail -n 2000 "$file" > "${file}.tmp" 2>/dev/null && mv -f "${file}.tmp" "$file" 2>/dev/null
+  fi
+}
+
 log() {
+  rotate_log "$WATCHDOG_LOG"
   echo "$(date '+%Y-%m-%d %H:%M:%S') $*"
 }
 
@@ -53,6 +67,7 @@ start_app() {
     cp "$MODDIR/static/management.html" "$STATIC_DIR/management.html"
     chmod 0644 "$STATIC_DIR/management.html"
   fi
+  rotate_log "$APP_LOG"
   cd "$DATADIR" || return 1
   GODEBUG=netdns=cgo MANAGEMENT_STATIC_PATH="$STATIC_DIR" nohup "$BINARY" --config "$CONFIG" >> "$APP_LOG" 2>&1 &
   app_pid=$!

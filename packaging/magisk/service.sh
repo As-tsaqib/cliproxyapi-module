@@ -1,5 +1,7 @@
 #!/system/bin/sh
 
+export PATH=/system/bin:/system/xbin:/vendor/bin:$PATH
+
 MODDIR=${0%/*}
 DATADIR=/data/adb/cliproxyapi
 WATCHDOG="$MODDIR/watchdog.sh"

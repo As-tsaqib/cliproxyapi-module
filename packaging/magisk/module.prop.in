@@ -4,4 +4,6 @@ version=@VERSION@
 versionCode=@VERSION_CODE@
 author=Rofiq
 description=Run CLIProxyAPI as an ARM64 Android 7+ boot service with guarded crash recovery.
-updateJson=https://raw.githubusercontent.com/greencabe/CLIProxyAPI-Magisk/main/packaging/magisk/update.json
+webui=http://127.0.0.1:8317/management.html
+updateJson=https://raw.githubusercontent.com/As-tsaqib/CLIProxyAPI-Magisk/main/packaging/magisk/update.json
+
