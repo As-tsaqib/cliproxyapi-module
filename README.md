@@ -21,7 +21,7 @@ publishes a traceable release archive.
 ## Installation
 
 1. Download `cliproxyapi-magisk.zip` and `checksums.txt` from the
-   [latest release](https://github.com/greencabe/CLIProxyAPI-Magisk/releases/latest).
+   [latest release](https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/latest).
 2. Verify the download with `sha256sum -c checksums.txt` when that tool is
    available.
 3. Install the ZIP from the module page in Magisk, KernelSU, or Next SU.

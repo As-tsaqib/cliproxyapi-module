@@ -379,7 +379,7 @@ jobs:
               "" \
               "Full machine-readable provenance is attached as \`provenance.json\`." \
               "" \
-              "Author: Rofiq."
+              "Author: As-tsaqib."
           } > release-notes.md
 
       - name: Validate release assets

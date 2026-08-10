@@ -5,7 +5,7 @@ DATADIR=/data/adb/cliproxyapi
 BIN="$MODPATH/bin/cli-proxy-api"
 
 ui_print "- CLIProxyAPI Magisk"
-ui_print "- Author: Rofiq"
+ui_print "- Author: As-tsaqib"
 ui_print "- Arch: $ARCH"
 
 [ "$ARCH" = "arm64" ] || abort "Unsupported arch: $ARCH. Need arm64-v8a."
