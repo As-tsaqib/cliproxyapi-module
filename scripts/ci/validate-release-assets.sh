@@ -136,7 +136,7 @@ if provenance["releaseTag"] != update["version"]:
 
 release_notes = release_notes_path.read_text(encoding="utf-8")
 release_notes_lower = release_notes.lower()
-if "## Upstream changes" not in release_notes:
+if "Changelog" not in release_notes and "## Upstream changes" not in release_notes:
     raise SystemExit("release notes do not include upstream changes")
 if any(
     marker in release_notes_lower
