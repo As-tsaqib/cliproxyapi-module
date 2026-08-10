@@ -16,7 +16,7 @@ High-Performance ARM64 Android boot service & root module for [CLIProxyAPI](http
 
 - **Native ARM64 Daemon:** Compiled specifically for Android 7.0+ (API 24+) ARM64 devices.
 - **Boot Autostart & Watchdog:** Automatic background startup with guarded crash-recovery.
-- **WebUI Management:** Embedded Management Dashboard (`http://127.0.0.1:8317/management.html`).
+- **WebUI Management:** Embedded Management Dashboard
 - **Termux Integration:** Auto-installed `cliproxyapi` CLI wrapper for direct Termux control.
 - **Automated Upstream Sync:** GitHub Actions automatically checks and builds official releases every 12 hours.
 
@@ -27,7 +27,11 @@ High-Performance ARM64 Android boot service & root module for [CLIProxyAPI](http
 1. Download **`cliproxyapi-magisk.zip`** from the [Latest Release](https://github.com/As-tsaqib/CLIProxyAPI-Magisk/releases/latest).
 2. Install the ZIP inside **KernelSU Next**, **APatch**, or **Magisk Manager**.
 3. Reboot device.
-4. Open WebUI at `http://127.0.0.1:8317/management.html` (Initial password: `admin123`).
+4. Open WebUI at `
+```text
+http://127.0.0.1:8317/management.html
+```
+(Initial password: `admin123`).
 
 ---
 
