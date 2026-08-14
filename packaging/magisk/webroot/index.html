@@ -42,6 +42,7 @@
         min-height: 100vh;
         display: flex;
         align-items: center;
+        align-items: safe center;
         justify-content: center;
         padding: 1rem;
         -webkit-font-smoothing: antialiased;
@@ -156,7 +157,6 @@
         align-items: center;
         margin-bottom: 0.75rem;
       }
-      .ActionBanner-timer { font-size: 12px; color: var(--text-tertiary); font-weight: normal; }
 
       .btn {
         display: flex;
@@ -180,15 +180,7 @@
       .btn-primary:hover {
         background: color-mix(in srgb, var(--text-primary) 86%, var(--bg-secondary));
       }
-      .btn-secondary {
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        border: 1px solid var(--border-color);
-        margin-top: 0.5rem;
-      }
-      .btn-secondary:hover {
-        background: var(--bg-hover);
-      }
+      .btn:disabled { cursor: default; opacity: 0.7; }
 
       .SectionHeader {
         font-size: 12px;
@@ -258,6 +250,214 @@
       .OfflineTitle { font-size: 13px; font-weight: 700; color: var(--error-color); margin-bottom: 0.3rem; }
       .OfflineDesc { font-size: 12px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 0.75rem; }
 
+      .ModelPanel {
+        background: color-mix(in srgb, var(--bg-tertiary) 50%, var(--bg-secondary));
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+        margin-bottom: 1.25rem;
+      }
+      .ModelPanel-toggle {
+        width: 100%;
+        min-height: 58px;
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        border: none;
+        background: transparent;
+        color: var(--text-primary);
+        padding: 0.7rem 0.85rem;
+        text-align: left;
+        cursor: pointer;
+      }
+      .ModelPanel-toggle:hover { background: color-mix(in srgb, var(--bg-hover) 55%, transparent); }
+      .ModelPanel-toggle:focus-visible { outline: 2px solid var(--primary-color); outline-offset: -2px; }
+      .ModelPanel-heading { min-width: 0; flex: 1 1 auto; }
+      .ModelPanel-title { display: block; font-size: 13px; font-weight: 600; line-height: 1.35; }
+      .ModelPanel-summary {
+        display: block;
+        color: var(--text-tertiary);
+        font-size: 10px;
+        line-height: 1.4;
+        margin-top: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .ModelPanel-summary[data-state="success"] { color: var(--success-color); }
+      .ModelPanel-summary[data-state="error"] { color: var(--error-color); }
+      .ModelPopupIcon {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        color: var(--text-tertiary);
+      }
+
+      body.models-modal-open { overflow: hidden; }
+      .ModelModal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-right)) max(1rem, env(safe-area-inset-bottom)) max(1rem, env(safe-area-inset-left));
+        background: rgba(0, 0, 0, 0.62);
+        backdrop-filter: blur(3px);
+      }
+      .ModelModal-dialog {
+        width: min(100%, 32rem);
+        max-height: calc(100vh - 2rem);
+        max-height: calc(100dvh - 2rem);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 14px;
+        box-shadow: 0 20px 55px rgba(0, 0, 0, 0.48);
+      }
+      .ModelModal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.8rem 0.85rem;
+      }
+      .ModelModal-heading { min-width: 0; }
+      .ModelModal-title { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+      .ModelModal-subtitle { font-size: 10px; color: var(--text-tertiary); margin-top: 2px; }
+      .ModelModal-actions { display: flex; align-items: center; gap: 0.45rem; }
+      .ModelModal-close {
+        width: 30px;
+        height: 30px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        cursor: pointer;
+      }
+      .ModelModal-close:hover { color: var(--text-primary); background: var(--bg-hover); }
+      .ModelModal-close svg { width: 16px; height: 16px; }
+      .ModelModal-body {
+        min-height: 0;
+        overflow-y: auto;
+        border-top: 1px solid var(--border-color);
+      }
+      .ModelPanel-status {
+        min-height: 42px;
+        padding: 0.65rem 0.85rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        color: var(--text-secondary);
+        font-size: 12px;
+      }
+      .ModelPanel-status[data-state="success"] { color: var(--success-color); }
+      .ModelPanel-status[data-state="error"] { color: var(--error-color); }
+      .ModelPanel-status[data-state="loading"]::before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        flex: 0 0 auto;
+        border: 2px solid var(--border-color);
+        border-top-color: var(--text-secondary);
+        border-radius: 50%;
+        animation: model-spin 0.8s linear infinite;
+      }
+      .ModelPanel-status[data-state="loading"] {
+        justify-content: flex-start;
+      }
+      @keyframes model-spin { to { transform: rotate(360deg); } }
+
+      .ModelRefreshBtn {
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 4px 9px;
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .ModelRefreshBtn:hover { background: var(--bg-hover); }
+      .ModelRefreshBtn:disabled { color: var(--text-tertiary); cursor: default; opacity: 0.7; }
+
+      .ModelAuth {
+        padding: 0 0.85rem 0.75rem;
+        border-top: 1px solid var(--border-color);
+      }
+      .ModelAuth-label {
+        display: block;
+        color: var(--text-secondary);
+        font-size: 11px;
+        padding: 0.65rem 0 0.35rem;
+      }
+      .ModelAuth-row { display: flex; gap: 0.5rem; }
+      .ModelInput {
+        width: 100%;
+        min-width: 0;
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 0.55rem 0.65rem;
+        font-family: var(--font-mono);
+        font-size: 12px;
+        outline: none;
+      }
+      .ModelInput:focus { border-color: var(--primary-color); }
+      .ModelAuth-submit { width: auto; flex: 0 0 auto; padding-inline: 0.85rem; }
+      .ModelHint { color: var(--text-tertiary); font-size: 10px; line-height: 1.4; margin-top: 0.4rem; }
+
+      .ModelTools {
+        padding: 0.65rem 0.85rem;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+      }
+      .ModelCount {
+        flex: 0 0 auto;
+        color: var(--text-tertiary);
+        font-size: 11px;
+        font-family: var(--font-mono);
+      }
+      .ModelList {
+        border-top: 1px solid var(--border-color);
+        max-height: 17rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+      }
+      .ModelRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0.6rem 0.85rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+      .ModelRow:last-child { border-bottom: none; }
+      .ModelIdentity { min-width: 0; }
+      .ModelName {
+        color: var(--text-primary);
+        font-family: var(--font-mono);
+        font-size: 12px;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+      }
+      .ModelOwner { color: var(--text-tertiary); font-size: 10px; margin-top: 2px; }
+      .ModelEmpty { color: var(--text-tertiary); font-size: 12px; padding: 0.85rem; text-align: center; }
+
+      @media (max-width: 390px) {
+        .ModelAuth-row { flex-direction: column; }
+        .ModelAuth-submit { width: 100%; }
+      }
+
       .hidden { display: none !important; }
     </style>
   </head>
@@ -302,13 +502,9 @@
       <div id="onlineBanner" class="ActionBanner hidden">
         <div class="ActionBanner-title">
           <span>Service Status: Healthy</span>
-          <span class="ActionBanner-timer" id="timerText">Redirect in <strong id="timerVal">3</strong>s</span>
         </div>
-        <a id="openBtn" href="http://127.0.0.1:8317/management.html" class="btn btn-primary">
+        <button id="openBtn" class="btn btn-primary" type="button" onclick="openManagementCenter()">
           Open Management Center
-        </a>
-        <button id="pauseBtn" class="btn btn-secondary" onclick="pauseRedirect()">
-          Stay on Gateway
         </button>
       </div>
 
@@ -321,6 +517,98 @@
         <button class="btn btn-primary" onclick="checkHealth()">
           Retry Connection
         </button>
+      </div>
+
+      <!-- Available Models -->
+      <div class="SectionHeader">API Models</div>
+      <div id="modelsPanel" class="ModelPanel">
+        <button
+          id="modelsPopupTrigger"
+          class="ModelPanel-toggle"
+          type="button"
+          aria-haspopup="dialog"
+          aria-controls="modelsModal"
+          aria-expanded="false"
+          onclick="openModelsPopup()"
+        >
+          <span class="ModelPanel-heading">
+            <span class="ModelPanel-title">Fetch Available Models</span>
+            <span id="modelsSummary" class="ModelPanel-summary" data-state="idle">Waiting for the service...</span>
+          </span>
+          <svg class="ModelPopupIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 3h6v6"></path>
+            <path d="m21 3-7 7"></path>
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        id="modelsModal"
+        class="ModelModal hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modelsModalTitle"
+        onclick="closeModelsOnBackdrop(event)"
+      >
+        <div class="ModelModal-dialog">
+          <div class="ModelModal-header">
+            <div class="ModelModal-heading">
+              <div id="modelsModalTitle" class="ModelModal-title">Available Models</div>
+              <div class="ModelModal-subtitle">Models currently exposed by CLIProxyAPI</div>
+            </div>
+            <div class="ModelModal-actions">
+              <button id="modelsRefreshBtn" class="ModelRefreshBtn" type="button" onclick="fetchModels(true)" disabled>
+                Fetch
+              </button>
+              <button id="modelsCloseBtn" class="ModelModal-close" type="button" onclick="closeModelsPopup()" aria-label="Close available models">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <path d="M18 6 6 18M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="modelsBody" class="ModelModal-body">
+          <div id="modelsStatus" class="ModelPanel-status" data-state="idle" role="status" aria-live="polite">
+            Waiting for the service...
+          </div>
+
+          <form id="modelsAuth" class="ModelAuth hidden" onsubmit="submitModelApiKey(event)">
+            <label class="ModelAuth-label" for="modelsApiKey">API key required</label>
+            <div class="ModelAuth-row">
+              <input
+                id="modelsApiKey"
+                class="ModelInput"
+                type="password"
+                placeholder="Paste a configured API key"
+                autocomplete="off"
+                autocapitalize="off"
+                spellcheck="false"
+              />
+              <button class="btn btn-primary ModelAuth-submit" type="submit">Fetch</button>
+            </div>
+            <div class="ModelHint">
+              KernelSU reads the first configured key automatically. Manual keys stay only in this page session.
+            </div>
+          </form>
+
+          <div id="modelsTools" class="ModelTools hidden">
+            <input
+              id="modelsSearch"
+              class="ModelInput"
+              type="search"
+              placeholder="Filter models..."
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+              oninput="renderModels()"
+            />
+            <span id="modelsCount" class="ModelCount">0 models</span>
+          </div>
+          <div id="modelsList" class="ModelList hidden"></div>
+          </div>
+        </div>
       </div>
 
       <!-- Dashboard Security Section -->
@@ -399,11 +687,334 @@
     <script>
       const HEALTH_URL = 'http://127.0.0.1:8317/healthz';
       const DASHBOARD_URL = 'http://127.0.0.1:8317/management.html';
+      const MODELS_URL = 'http://127.0.0.1:8317/v1/models';
+      const READ_API_KEY_COMMAND = `awk 'BEGIN { in_keys = 0 } /^api-keys:[[:space:]]*$/ { in_keys = 1; next } in_keys && /^[[:space:]]*-[[:space:]]*/ { key = $0; sub(/^[[:space:]]*-[[:space:]]*/, "", key); gsub(/^[[:space:]\\047"]+|[[:space:]\\047"]+$/, "", key); print key; exit } in_keys && /^[^[:space:]]/ { exit }' /data/adb/cliproxyapi/config.yaml`;
+      const OPEN_DASHBOARD_IN_CHROME_COMMAND = `am start --user 0 -a android.intent.action.VIEW -d '${DASHBOARD_URL}' -p com.android.chrome >/dev/null 2>&1`;
+      const OPEN_DASHBOARD_COMMAND = `am start --user 0 -a android.intent.action.VIEW -d '${DASHBOARD_URL}' >/dev/null 2>&1`;
 
-      let redirectTimer = null;
-      let countdown = 3;
-      let isPaused = false;
       let pollTimer = null;
+      let isServiceOnline = false;
+      let modelsLoading = false;
+      let modelsLoaded = false;
+      let availableModels = [];
+      let modelsPopupOpen = false;
+      let modelsPopupHistoryEntry = false;
+      let modelsPopupLastFocus = null;
+
+      function hideModelsPopup(restoreFocus = true) {
+        if (!modelsPopupOpen) return;
+        modelsPopupOpen = false;
+        document.getElementById('modelsModal').classList.add('hidden');
+        document.getElementById('modelsPopupTrigger').setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('models-modal-open');
+
+        if (restoreFocus) {
+          const focusTarget = modelsPopupLastFocus && typeof modelsPopupLastFocus.focus === 'function'
+            ? modelsPopupLastFocus
+            : document.getElementById('modelsPopupTrigger');
+          focusTarget.focus();
+        }
+        modelsPopupLastFocus = null;
+      }
+
+      function openModelsPopup(fetchIfNeeded = true) {
+        if (modelsPopupOpen) return;
+        modelsPopupOpen = true;
+        modelsPopupLastFocus = document.activeElement;
+        document.getElementById('modelsModal').classList.remove('hidden');
+        document.getElementById('modelsPopupTrigger').setAttribute('aria-expanded', 'true');
+        document.body.classList.add('models-modal-open');
+
+        try {
+          history.pushState({ cliproxyModelsPopup: true }, '');
+          modelsPopupHistoryEntry = true;
+        } catch (error) {
+          modelsPopupHistoryEntry = false;
+        }
+
+        setTimeout(() => document.getElementById('modelsCloseBtn').focus(), 0);
+        if (fetchIfNeeded && isServiceOnline && !modelsLoaded && !modelsLoading) fetchModels(false);
+      }
+
+      function closeModelsPopup() {
+        if (!modelsPopupOpen) return;
+        const removeHistoryEntry = modelsPopupHistoryEntry;
+        modelsPopupHistoryEntry = false;
+        hideModelsPopup(true);
+        if (removeHistoryEntry) history.back();
+      }
+
+      function closeModelsOnBackdrop(event) {
+        if (event.target === document.getElementById('modelsModal')) closeModelsPopup();
+      }
+
+      window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && modelsPopupOpen) closeModelsPopup();
+      });
+
+      window.addEventListener('popstate', () => {
+        if (!modelsPopupOpen) return;
+        modelsPopupHistoryEntry = false;
+        hideModelsPopup(true);
+      });
+
+      function setModelsStatus(message, state = 'idle', summaryMessage = message) {
+        const status = document.getElementById('modelsStatus');
+        const summary = document.getElementById('modelsSummary');
+        status.textContent = message;
+        status.dataset.state = state;
+        summary.textContent = summaryMessage;
+        summary.dataset.state = state;
+      }
+
+      function setModelAuthVisible(visible) {
+        document.getElementById('modelsAuth').classList.toggle('hidden', !visible);
+      }
+
+      function runRootCommand(command) {
+        return new Promise((resolve, reject) => {
+          if (!window.ksu || typeof window.ksu.exec !== 'function') {
+            const error = new Error('Root-manager bridge is unavailable');
+            error.code = 'NO_BRIDGE';
+            reject(error);
+            return;
+          }
+
+          const callbackName = `__cliproxy_exec_${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
+          const commandTimer = setTimeout(() => {
+            delete window[callbackName];
+            const error = new Error('Root-manager bridge timed out');
+            error.code = 'BRIDGE_TIMEOUT';
+            reject(error);
+          }, 3500);
+
+          window[callbackName] = (errno, stdout, stderr) => {
+            clearTimeout(commandTimer);
+            delete window[callbackName];
+            resolve({ errno: Number(errno), stdout: stdout || '', stderr: stderr || '' });
+          };
+
+          try {
+            window.ksu.exec(command, '{}', callbackName);
+          } catch (cause) {
+            clearTimeout(commandTimer);
+            delete window[callbackName];
+            const error = new Error('Root-manager bridge failed');
+            error.code = 'BRIDGE_ERROR';
+            error.cause = cause;
+            reject(error);
+          }
+        });
+      }
+
+      async function openManagementCenter() {
+        const button = document.getElementById('openBtn');
+        const originalLabel = button.textContent;
+        button.disabled = true;
+        button.textContent = 'Opening Chrome...';
+
+        try {
+          if (window.ksu && typeof window.ksu.exec === 'function') {
+            let result = await runRootCommand(OPEN_DASHBOARD_IN_CHROME_COMMAND);
+            if (result.errno !== 0) result = await runRootCommand(OPEN_DASHBOARD_COMMAND);
+            if (result.errno !== 0) throw new Error('Could not launch a browser');
+          } else {
+            const openedWindow = window.open(DASHBOARD_URL, '_blank', 'noopener,noreferrer');
+            if (!openedWindow) location.href = DASHBOARD_URL;
+          }
+          button.textContent = 'Opened in Chrome';
+        } catch (error) {
+          location.href = DASHBOARD_URL;
+        } finally {
+          setTimeout(() => {
+            button.disabled = false;
+            button.textContent = originalLabel;
+          }, 1500);
+        }
+      }
+
+      async function readConfiguredApiKey() {
+        const result = await runRootCommand(READ_API_KEY_COMMAND);
+        const apiKey = result.stdout.trim();
+        if (result.errno !== 0 || !apiKey || apiKey.length > 2048 || /[\r\n]/.test(apiKey)) {
+          const error = new Error('No readable API key was found');
+          error.code = 'KEY_UNAVAILABLE';
+          throw error;
+        }
+        return apiKey;
+      }
+
+      async function requestAvailableModels(apiKey) {
+        const controller = new AbortController();
+        const requestTimer = setTimeout(() => controller.abort(), 8000);
+
+        try {
+          const response = await fetch(MODELS_URL, {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              Authorization: `Bearer ${apiKey}`,
+            },
+            cache: 'no-store',
+            signal: controller.signal,
+          });
+
+          if (!response.ok) {
+            const error = new Error(`Models request failed with HTTP ${response.status}`);
+            error.code = response.status === 401 ? 'UNAUTHORIZED' : 'HTTP_ERROR';
+            throw error;
+          }
+
+          const payload = await response.json();
+          if (!payload || !Array.isArray(payload.data)) {
+            const error = new Error('Models response has an unexpected format');
+            error.code = 'INVALID_RESPONSE';
+            throw error;
+          }
+
+          const uniqueModels = new Map();
+          payload.data.forEach((item) => {
+            if (!item || typeof item.id !== 'string' || !item.id.trim()) return;
+            const id = item.id.trim();
+            if (!uniqueModels.has(id)) {
+              uniqueModels.set(id, {
+                id,
+                owner: typeof item.owned_by === 'string' && item.owned_by.trim() ? item.owned_by.trim() : 'unknown',
+              });
+            }
+          });
+
+          return Array.from(uniqueModels.values()).sort((left, right) => left.id.localeCompare(right.id));
+        } catch (error) {
+          if (error && error.name === 'AbortError') {
+            const timeoutError = new Error('Models request timed out');
+            timeoutError.code = 'REQUEST_TIMEOUT';
+            throw timeoutError;
+          }
+          throw error;
+        } finally {
+          clearTimeout(requestTimer);
+        }
+      }
+
+      function renderModels() {
+        const list = document.getElementById('modelsList');
+        const count = document.getElementById('modelsCount');
+        const query = document.getElementById('modelsSearch').value.trim().toLowerCase();
+        const filteredModels = availableModels.filter((model) =>
+          model.id.toLowerCase().includes(query) || model.owner.toLowerCase().includes(query)
+        );
+
+        count.textContent = query
+          ? `${filteredModels.length}/${availableModels.length}`
+          : `${availableModels.length} ${availableModels.length === 1 ? 'model' : 'models'}`;
+
+        while (list.firstChild) list.removeChild(list.firstChild);
+        if (!filteredModels.length) {
+          const empty = document.createElement('div');
+          empty.className = 'ModelEmpty';
+          empty.textContent = availableModels.length ? 'No models match this filter.' : 'No models are currently available.';
+          list.appendChild(empty);
+          return;
+        }
+
+        filteredModels.forEach((model) => {
+          const row = document.createElement('div');
+          row.className = 'ModelRow';
+
+          const identity = document.createElement('div');
+          identity.className = 'ModelIdentity';
+
+          const name = document.createElement('div');
+          name.className = 'ModelName';
+          name.textContent = model.id;
+
+          const owner = document.createElement('div');
+          owner.className = 'ModelOwner';
+          owner.textContent = model.owner;
+
+          const copyButton = document.createElement('button');
+          copyButton.className = 'ModelRefreshBtn';
+          copyButton.type = 'button';
+          copyButton.textContent = 'Copy';
+          copyButton.title = `Copy ${model.id}`;
+          copyButton.addEventListener('click', () => copyVal(model.id, copyButton));
+
+          identity.appendChild(name);
+          identity.appendChild(owner);
+          row.appendChild(identity);
+          row.appendChild(copyButton);
+          list.appendChild(row);
+        });
+      }
+
+      async function fetchModels(interactive = false, suppliedApiKey = '') {
+        if (modelsLoading || !isServiceOnline) return;
+        if (interactive) openModelsPopup(false);
+
+        const refreshButton = document.getElementById('modelsRefreshBtn');
+        const manualInput = document.getElementById('modelsApiKey');
+        let apiKey = String(suppliedApiKey || '').trim();
+
+        if (!apiKey && interactive && !document.getElementById('modelsAuth').classList.contains('hidden')) {
+          apiKey = manualInput.value.trim();
+          manualInput.value = '';
+        }
+
+        modelsLoading = true;
+        refreshButton.disabled = true;
+        setModelsStatus('Fetching available models...', 'loading', 'Fetching models...');
+
+        try {
+          if (!apiKey) apiKey = await readConfiguredApiKey();
+          availableModels = await requestAvailableModels(apiKey);
+          modelsLoaded = true;
+          setModelAuthVisible(false);
+          document.getElementById('modelsTools').classList.remove('hidden');
+          document.getElementById('modelsList').classList.remove('hidden');
+          refreshButton.textContent = 'Refresh';
+          setModelsStatus(
+            `Fetched ${availableModels.length} available ${availableModels.length === 1 ? 'model' : 'models'}.`,
+            'success',
+            `${availableModels.length} ${availableModels.length === 1 ? 'model' : 'models'} available`
+          );
+          renderModels();
+        } catch (error) {
+          if (error && ['NO_BRIDGE', 'BRIDGE_TIMEOUT', 'BRIDGE_ERROR', 'KEY_UNAVAILABLE', 'UNAUTHORIZED'].includes(error.code)) {
+            setModelAuthVisible(true);
+            setModelsStatus(
+              error.code === 'UNAUTHORIZED'
+                ? 'The API key was rejected. Enter a valid configured key.'
+                : 'Enter an API key to fetch the available models.',
+              'error',
+              'API key required'
+            );
+          } else if (error && error.code === 'REQUEST_TIMEOUT') {
+            setModelsStatus('The models request timed out. Try again.', 'error', 'Fetch timed out');
+          } else if (error && error.code === 'INVALID_RESPONSE') {
+            setModelsStatus('The service returned an invalid models response.', 'error', 'Invalid response');
+          } else {
+            setModelsStatus('Could not fetch models from the local service.', 'error', 'Fetch failed');
+          }
+        } finally {
+          apiKey = '';
+          modelsLoading = false;
+          refreshButton.disabled = !isServiceOnline;
+        }
+      }
+
+      function submitModelApiKey(event) {
+        event.preventDefault();
+        const input = document.getElementById('modelsApiKey');
+        const apiKey = input.value.trim();
+        if (!apiKey) {
+          setModelsStatus('Enter an API key first.', 'error', 'API key required');
+          input.focus();
+          return;
+        }
+        input.value = '';
+        fetchModels(true, apiKey);
+      }
 
       async function checkHealth() {
         const badge = document.getElementById('statusBadge');
@@ -425,6 +1036,7 @@
           const t1 = performance.now();
 
           if (res.ok) {
+            isServiceOnline = true;
             badge.className = 'Badge-pill Badge-online';
             statusText.innerText = 'Online';
 
@@ -434,13 +1046,15 @@
 
             offlineBanner.classList.add('hidden');
             onlineBanner.classList.remove('hidden');
+            document.getElementById('modelsRefreshBtn').disabled = modelsLoading;
 
             if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
-            if (!isPaused && !redirectTimer) startTimer();
+            if (!modelsLoaded && !modelsLoading) fetchModels(false);
             return;
           }
         } catch (e) {}
 
+        isServiceOnline = false;
         badge.className = 'Badge-pill Badge-offline';
         statusText.innerText = 'Offline';
         valVersion.innerText = 'Stopped';
@@ -448,27 +1062,10 @@
 
         onlineBanner.classList.add('hidden');
         offlineBanner.classList.remove('hidden');
+        document.getElementById('modelsRefreshBtn').disabled = true;
+        if (!modelsLoaded) setModelsStatus('Service offline. Retry after it is running.', 'error', 'Service offline');
 
         if (!pollTimer) pollTimer = setInterval(checkHealth, 4000);
-      }
-
-      function startTimer() {
-        const timerVal = document.getElementById('timerVal');
-        redirectTimer = setInterval(() => {
-          countdown--;
-          if (timerVal) timerVal.innerText = countdown;
-          if (countdown <= 0) {
-            clearInterval(redirectTimer);
-            location.replace(DASHBOARD_URL);
-          }
-        }, 1000);
-      }
-
-      function pauseRedirect() {
-        isPaused = true;
-        if (redirectTimer) { clearInterval(redirectTimer); redirectTimer = null; }
-        document.getElementById('timerText').innerText = 'Auto-redirect paused';
-        document.getElementById('pauseBtn').classList.add('hidden');
       }
 
       function copyVal(text, btn) {
