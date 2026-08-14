@@ -6,5 +6,5 @@ author=As-tsaqib
 description=CLIProxyAPI boot service for Android.
 webui=http://127.0.0.1:8317/management.html
 updateJson=https://raw.githubusercontent.com/As-tsaqib/CLIProxyAPI-Magisk/main/packaging/magisk/update.json
-banner=banner.png
+banner=cliproxyapi-banner.png
 

@@ -10,7 +10,7 @@ High-Performance ARM64 Android boot service & root module for [CLIProxyAPI](http
 
 ---
 
-![CLIProxyAPI Banner](banner.png)
+![CLIProxyAPI Banner](cliproxyapi-banner.png)
 
 ## ✨ Features
 
